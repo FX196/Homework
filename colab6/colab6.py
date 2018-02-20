@@ -35,12 +35,29 @@ def init(data):
     data.rows = 15
     data.cols = 10
     data.emptyColor = "blue"
-    data.board = [[]*15]
+    data.board = getBoard(data)
     data.piecesColor = [ "red", "yellow", "magenta", "pink", "cyan",
     "green", "orange" ]
     data.fallingPiece = []
     data.fallingPieceColor = []
     newFallingPiece(data)
+
+def getBoard(data):
+    board = [[]*data.rows]
+    for row in range(data.rows):
+        board.append([])
+        for col in range(data.cols):
+            if col==0 and row==0:
+                board[row].append("red")
+            elif row==0 and col==data.cols-1:
+                board[row].append("white")
+            elif row==data.rows-1 and col==0:
+                board[row].append("green")
+            elif row==data.rows-1 and col==data.cols-1:
+                board[row].append("gray")
+            else:
+                board[row].append(data.emptyColor)
+    return board
 
 def keyPressed(event,data):
     if event.keysym == "Down":
@@ -67,18 +84,7 @@ def playTeris(rows=15,cols=10):
 def drawBoard(canvas,data):
     canvas.create_rectangle(0,0,data.width,data.height,fill="orange")
     for row in range(data.rows):
-        data.board.append([])
         for col in range(data.cols):
-            if col==0 and row==0:
-                data.board[row].append("red")
-            elif row==0 and col==data.cols-1:
-                data.board[row].append("white")
-            elif row==data.rows-1 and col==0:
-                data.board[row].append("green")
-            elif row==data.rows-1 and col==data.cols-1:
-                data.board[row].append("gray")
-            else:
-                data.board[row].append(data.emptyColor)
             drawCell(canvas,data,row,col,data.board[row][col])
     
 def drawCell(canvas,data,row,col,color):
@@ -138,7 +144,7 @@ def fallingPiecesLegal(data):
                 if shape[row][col] and data.board[row+rPiece][col+cPiece] != data.emptyColor:
                     return False
     return True
-    
+
 def rotateFallingPiece():
     pass
     
