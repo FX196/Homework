@@ -40,9 +40,16 @@ def init(data):
     "green", "orange" ]
     data.fallingPiece = []
     data.fallingPieceColor = []
+    newFallingPiece(data)
 
 def keyPressed(event,data):
-    pass
+    if event.keysym == "Down":
+        moveFallingPiece(data, 1, 0)
+    elif event.keysym == "Left":
+        moveFallingPiece(data, 0, -1)
+    elif event.keysym == "Right":
+        moveFallingPiece(data, 0, 1)
+
 
 
 def mousePressed(event,data):
@@ -51,6 +58,7 @@ def mousePressed(event,data):
 
 
 def timerFired(data):
+    #moveFallingPiece(data, 1, 0)
     pass
 
 def playTeris(rows=15,cols=10):
@@ -98,7 +106,6 @@ def newFallingPiece(data):
     
 
 def drawFallingPiece(canvas,data):
-    newFallingPiece(data)
     piece = data.fallingPiece[0]
     frow = data.fallingPiece[1]
     fcol = data.fallingPiece[2]
@@ -106,7 +113,6 @@ def drawFallingPiece(canvas,data):
         for col in range(len(piece[0])):
             if piece[row][col] == True:
                 drawCell(canvas,data,row+frow,col+fcol,data.fallingPieceColor)
-
 
 
 def moveFallingPiece(data,drow,dcol):
@@ -117,8 +123,20 @@ def moveFallingPiece(data,drow,dcol):
     else:
         data.fallingPiece[1] -=drow
         data.fallingPiece[2] -=dcol
-    
+
+
 def fallingPiecesLegal(data):
+    shape, rPiece, cPiece = data.fallingPiece
+    if rPiece < 0 or cPiece < 0:
+        return False
+    elif rPiece > data.rows-len(shape) or \
+            cPiece > data.cols-len(shape[0]):
+        return False
+    else:
+        for row in range(len(shape)):
+            for col in range(len(shape[0])):
+                if shape[row][col] and data.board[row+rPiece][col+cPiece] != data.emptyColor:
+                    return False
     return True
     
 def rotateFallingPiece():
@@ -134,10 +152,6 @@ def removeFullRows():
 def redrawAll(canvas,data):
     drawBoard(canvas,data)
     drawFallingPiece(canvas,data)
-
-
-
-
 
 
 
