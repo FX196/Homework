@@ -40,6 +40,7 @@ def init(data):
     data.cols = 10
     data.emptyColor = "blue"
     data.board = getBoard(data)
+    data.score = int(0)
     data.piecesColor = [ "red", "yellow", "magenta", "pink", "cyan",
     "green", "orange" ]
     data.gameOver = False
@@ -202,6 +203,9 @@ def checkGameOver(canvas, data):
         canvas.create_text(data.width / 2, data.height / 3, text="Game Over!!",
                        font="Arial " + str(int(data.cellSize * 1.5)) + " bold", fill="yellow")
 
+def showScore(canvas, data):
+    canvas.create_text(data.width / 2, data.margin / 2, text=("Score: %d" % data.score),\
+                       font="Arial " +str(int(data.margin / 2)), fill="black")
 
 def removeFullRows():
     pass
@@ -210,6 +214,7 @@ def removeFullRows():
 def redrawAll(canvas, data):
     drawBoard(canvas, data)
     drawFallingPiece(canvas, data)
+    showScore(canvas, data)
     checkGameOver(canvas, data)
 
 
