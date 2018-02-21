@@ -45,11 +45,11 @@ def init(data):
     "green", "orange" ]
     data.gameOver = False
     data.fallingPiece = []
-    data.fallingPieceColor = []
+    data.fallingPieceColor = ""
     newFallingPiece(data)
 
 def getBoard(data):
-    board = [[]*data.rows]
+    board = []
     for row in range(data.rows):
         board.append([])
         for col in range(data.cols):
@@ -118,7 +118,7 @@ def newFallingPiece(data):
     else:
         fallRow,fallCol = (0,4) 
     data.fallingPiece = [tetrisPieces[randomInd],fallRow,fallCol]
-    data.fallingPieceColor = [data.piecesColor[randomInd]]
+    data.fallingPieceColor = data.piecesColor[randomInd]
 
     if not fallingPiecesLegal(data):
         data.gameOver = True
@@ -193,6 +193,7 @@ def placeFallingPiece(data):
         for col in range(len(shape[0])):
             if shape[row][col]:
                 data.board[row+r][col+c] = data.fallingPieceColor
+    removeFullRows(data)
 
     newFallingPiece(data)
 
@@ -207,8 +208,20 @@ def showScore(canvas, data):
     canvas.create_text(data.width / 2, data.margin / 2, text=("Score: %d" % data.score),\
                        font="Arial " +str(int(data.margin / 2)), fill="black")
 
-def removeFullRows():
-    pass
+
+def removeFullRows(data):
+    count = 0
+    ind = 0
+    while ind < len(data.board):
+        if data.emptyColor not in data.board[ind]:
+            data.board.pop(ind)
+            count += 1
+        else:
+            ind += 1
+    while len(data.board) < data.rows:
+        emptyRow = [data.emptyColor]*data.cols
+        data.board.insert(0, emptyRow)
+    data.score += count ** 2
 
 
 def redrawAll(canvas, data):
@@ -250,7 +263,7 @@ def run(width=300, height=300):
     data = Struct()
     data.width = width
     data.height = height
-    data.timerDelay = 1000 # milliseconds
+    data.timerDelay = 200 # milliseconds
     root = Tk()
     init(data)
     # create the root and the canvas
