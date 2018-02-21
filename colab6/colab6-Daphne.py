@@ -84,7 +84,7 @@ def playTeris(rows=15, cols=10):
 
 
 def getBoard(data):
-    board = [[] * (data.rows - 1)]
+    board = []
     for row in range(data.rows):
         board.append([])
         for col in range(data.cols):
