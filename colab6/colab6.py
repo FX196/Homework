@@ -124,6 +124,8 @@ def newFallingPiece(data):
 
 
 def drawFallingPiece(canvas,data):
+    if data.gameOver:
+        return
     piece = data.fallingPiece[0]
     frow = data.fallingPiece[1]
     fcol = data.fallingPiece[2]
@@ -209,7 +211,6 @@ def redrawAll(canvas, data):
     drawBoard(canvas, data)
     drawFallingPiece(canvas, data)
     checkGameOver(canvas, data)
-
 
 
 
