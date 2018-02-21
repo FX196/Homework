@@ -42,6 +42,7 @@ def init(data):
     data.board = getBoard(data)
     data.piecesColor = [ "red", "yellow", "magenta", "pink", "cyan",
     "green", "orange" ]
+    data.gameOver = False
     data.fallingPiece = []
     data.fallingPieceColor = []
     newFallingPiece(data)
@@ -64,6 +65,10 @@ def getBoard(data):
     return board
 
 def keyPressed(event,data):
+    if event.keysym == "r":
+        init(data)
+    elif data.gameOver:
+        return
     if event.keysym == "Up":
         rotateFallingPiece(data)
     elif event.keysym == "Down":
@@ -81,8 +86,11 @@ def mousePressed(event,data):
 
 
 def timerFired(data):
-    moveFallingPiece(data, 1, 0)
-    pass
+    if data.gameOver:
+        return
+    moved = moveFallingPiece(data, 1, 0)
+    if not moved:
+        placeFallingPiece(data)
 
 
 def playTeris(rows=15,cols=10):
@@ -104,9 +112,9 @@ def drawCell(canvas,data,row,col,color):
 
 
 def newFallingPiece(data):
-    iPiece = [[  True,  True,  True,  True ]]
-    jPiece = [[  True, False, False ],[  True,  True,  True ]]
-    lPiece = [[ False, False,  True ],[  True,  True,  True ]]
+    iPiece = [[True,  True,  True,  True]]
+    jPiece = [[True, False, False],[True,  True,  True]]
+    lPiece = [[ False, False,  True ],[True,  True,  True]]
     oPiece = [[  True,  True ],[  True,  True ]]
     sPiece = [[ False,  True,  True ],[  True,  True, False ]]
     tPiece = [[ False,  True, False ],[  True,  True,  True ]]
@@ -119,7 +127,10 @@ def newFallingPiece(data):
         fallRow,fallCol = (0,4) 
     data.fallingPiece = [tetrisPieces[randomInd],fallRow,fallCol]
     data.fallingPieceColor = [data.piecesColor[randomInd]]
-    
+
+    if not fallingPiecesLegal(data):
+        data.gameOver = True
+
 
 def drawFallingPiece(canvas,data):
     piece = data.fallingPiece[0]
@@ -181,17 +192,32 @@ def rotateFallingPiece(data):
         pass
 
     
-def placeFallingPiece():
-    pass
+def placeFallingPiece(data):
+    shape, r, c = data.fallingPiece
+
+    for row in range(len(shape)):
+        for col in range(len(shape[0])):
+            if shape[row][col]:
+                data.board[row+r][col+c] = data.fallingPieceColor
+
+    newFallingPiece(data)
+
+def checkGameOver(canvas, data):
+    if data.gameOver:
+        canvas.create_rectangle(data.margin, data.height / 4, data.width - data.margin,
+                            data.height / 2, fill="black")
+        canvas.create_text(data.width / 2, data.height / 3, text="Game Over!!",
+                       font="Arial " + str(int(data.cellSize * 1.5)) + " bold", fill="yellow")
 
 
 def removeFullRows():
     pass
 
 
-def redrawAll(canvas,data):
-    drawBoard(canvas,data)
-    drawFallingPiece(canvas,data)
+def redrawAll(canvas, data):
+    drawBoard(canvas, data)
+    drawFallingPiece(canvas, data)
+    checkGameOver(canvas, data)
 
 
 
