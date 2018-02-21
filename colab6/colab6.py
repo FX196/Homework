@@ -11,11 +11,15 @@ import random
 # Helper functions
 #################################################
 
+
 def almostEqual(d1, d2, epsilon=10**-7):
     # note: use math.isclose() outside 15-112 with Python version 3.5 or later
     return (abs(d2 - d1) < epsilon)
 
+
 import decimal
+
+
 def roundHalfUp(d):
     # Round to nearest with ties going away from zero.
     rounding = decimal.ROUND_HALF_UP
@@ -60,38 +64,44 @@ def getBoard(data):
     return board
 
 def keyPressed(event,data):
-    if event.keysym == "Down":
-        moveFallingPiece(data, 1, 0)
+    if event.keysym == "Up":
+        rotateFallingPiece(data)
+    elif event.keysym == "Down":
+        moveFallingPiece(data, +1, 0)
     elif event.keysym == "Left":
         moveFallingPiece(data, 0, -1)
     elif event.keysym == "Right":
-        moveFallingPiece(data, 0, 1)
-
+        moveFallingPiece(data, 0, +1)
+    if event.char == "b":
+        newFallingPiece(data)
 
 
 def mousePressed(event,data):
     pass
 
 
-
 def timerFired(data):
-    #moveFallingPiece(data, 1, 0)
+    moveFallingPiece(data, 1, 0)
     pass
+
 
 def playTeris(rows=15,cols=10):
     pass
+
 
 def drawBoard(canvas,data):
     canvas.create_rectangle(0,0,data.width,data.height,fill="orange")
     for row in range(data.rows):
         for col in range(data.cols):
             drawCell(canvas,data,row,col,data.board[row][col])
-    
+
+
 def drawCell(canvas,data,row,col,color):
     canvas.create_rectangle(data.margin+col*data.cellSize,
     data.margin+row*data.cellSize,data.margin+(col+1)*data.cellSize,
     data.margin+(row+1)*data.cellSize,
     fill=color,width=3,outline = "black")
+
 
 def newFallingPiece(data):
     iPiece = [[  True,  True,  True,  True ]]
@@ -125,14 +135,19 @@ def moveFallingPiece(data,drow,dcol):
     data.fallingPiece[1] += drow
     data.fallingPiece[2] += dcol
     if fallingPiecesLegal(data):
-        pass
+        return True
     else:
         data.fallingPiece[1] -=drow
         data.fallingPiece[2] -=dcol
+        return False
 
 
-def fallingPiecesLegal(data):
-    shape, rPiece, cPiece = data.fallingPiece
+def fallingPiecesLegal(data, *piece):
+    if not piece:
+        piece = data.fallingPiece
+    else:
+        piece = piece[0]
+    shape, rPiece, cPiece = piece
     if rPiece < 0 or cPiece < 0:
         return False
     elif rPiece > data.rows-len(shape) or \
@@ -145,12 +160,31 @@ def fallingPiecesLegal(data):
                     return False
     return True
 
-def rotateFallingPiece():
-    pass
+def rotateFallingPiece(data):
+    oldPiece = data.fallingPiece[0]
+    oldCenterRow = data.fallingPiece[1] + len(oldPiece) // 2
+    oldCenterCol = data.fallingPiece[2] + len(oldPiece[0]) // 2
+    newNumRows, newNumCols = len(oldPiece[0]), len(oldPiece)
+    newRow = oldCenterRow - newNumRows // 2
+    newCol = oldCenterCol - newNumCols // 2
+    newPiece = []
+    for col in range(len(oldPiece[0])):
+        newPiece.append([])
+        row = len(oldPiece) - 1
+        while row >= 0:
+            newPiece[col].append(oldPiece[row][col])
+            row -= 1
+    tnewPiece = [newPiece, newRow, newCol]
+    if fallingPiecesLegal(data, tnewPiece):
+        data.fallingPiece = [newPiece, newRow, newCol]
+    else:
+        pass
+
     
 def placeFallingPiece():
     pass
-    
+
+
 def removeFullRows():
     pass
 
