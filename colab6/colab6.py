@@ -52,16 +52,7 @@ def getBoard(data):
     for row in range(data.rows):
         board.append([])
         for col in range(data.cols):
-            if col==0 and row==0:
-                board[row].append("red")
-            elif row==0 and col==data.cols-1:
-                board[row].append("white")
-            elif row==data.rows-1 and col==0:
-                board[row].append("green")
-            elif row==data.rows-1 and col==data.cols-1:
-                board[row].append("gray")
-            else:
-                board[row].append(data.emptyColor)
+            board[row].append(data.emptyColor)
     return board
 
 def keyPressed(event,data):
