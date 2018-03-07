@@ -115,43 +115,21 @@ def movieAwards(oscarResults):
         movieList.append(i[1])
     movieSet = set(movieList)
     for movie in movieSet:
-        awards = []
-        for award in oscarResults:
-            if movie in award[1]:
-                awards.append(award[0])
-                d[movie] = set(awards)
-    anotherd = dict()
-    for i in oscarResults:
-        anotherd[i[1]] = i[0]
-    anotherd.update(d)
-    return anotherd
+        d[movie]=set()
+    for award in oscarResults:
+        d[award[1]]=d[award[1]].union({award[0]})
+    return d
+
 
 def friendsOfFriends(d):
-    names = []
-    matchedFriends = []
-    fOF = []
-    newd = dict()
-    for name in d:
-        names.append(name)
-        matchedFriends.append(d[name])
-    for i in range(len(names)):
-        friends = []
-        for j in range(len(names)):
-            if names[j] in d[names[i]]:
-                friends += d[names[j]]
-        fOF.append(friends)
-    FOF = []
-    for i in fOF:
-        FOF.append(set(i))
-    for i in range(len(FOF)):
-        FOF[i].discard(names[i])
-        FOF[i] = FOF[i]-matchedFriends[i]
-        newd[names[i]] = FOF[i]
-    #print(names)
-    #print(matchedFriends)
-    #print(FOF)
-    #print(fOF)
-    return newd
+    res={}
+    for person in d:
+        res[person] = set()
+        for friend in d[person]:
+            res[person] = res[person].union(d[friend])
+        res[person] = res[person].difference(d[person].union({person}))
+    return res
+
     
     
 
@@ -250,7 +228,7 @@ b = { }
 
 def testFriendsOfFriends():
     print("Testing friendsOfFriends()...", end="")
-    assert(a == a1)
+    assert(friendsOfFriends(a) == a1)
     print("Passed!")
 
 

@@ -35,17 +35,20 @@ def roundHalfUp(d):
 from tkinter import *
 
 
-def init(data):
+def init(data, width, height):
+    data.width = width
+    data.height = height
+    data.timerDelay = 600  # milliseconds
     data.cellSize = 20
     data.margin = 25
-    data.rows = 15
-    data.cols = 10
+    data.rows = int((height - data.margin*2) / data.cellSize)
+    data.cols = int((width - data.margin*2) / data.cellSize)
     data.emptyColor = "blue"
     data.board = getBoard(data)
     data.piecesColor = ["red", "yellow", "magenta", "pink", "cyan",
                         "green", "orange"]
     data.fallingPiece = []
-    data.fallingPieceColor = []
+    data.fallingPieceColor = ""
     data.firstFallingPiece = newFallingPiece(data)
     data.score = 0
     data.isGameOver = False
@@ -66,10 +69,6 @@ def keyPressed(event, data):
             moveFallingPiece(data, 0, +1)
 
 
-def mousePressed(event, data):
-    pass
-
-
 def timerFired(data):
     if data.isGameOver == False:
         moved = moveFallingPiece(data, 1, 0)
@@ -80,7 +79,9 @@ def timerFired(data):
 
 
 def playTeris(rows=15, cols=10):
-    pass
+    cellSize = 20
+    margin = 25
+    run((margin * 2 + cellSize * cols), (margin * 2 + cellSize * rows))
 
 
 def getBoard(data):
@@ -121,7 +122,7 @@ def newFallingPiece(data):
     else:
         fallRow, fallCol = (0, 4)
     data.fallingPiece = [tetrisPieces[randomInd], fallRow, fallCol]
-    data.fallingPieceColor = [data.piecesColor[randomInd]]
+    data.fallingPieceColor = data.piecesColor[randomInd]
     if fallingPiecesLegal(data, data.fallingPiece):
         pass
     else:
@@ -196,7 +197,7 @@ def placeFallingPiece(data):
         for col in range(len(piece[0])):
             if piece[row][col] == True:
                 data.board[frow + row][fcol + col] = color
-                removeFullRows(data)
+    removeFullRows(data)
 
 
 def gameOver(canvas, data):
@@ -211,6 +212,7 @@ def removeFullRows(data):
     ind = 0
     while ind < len(data.board):
         if data.emptyColor not in data.board[ind]:
+            print()
             data.board.pop(ind)
             count += 1
         else:
@@ -238,10 +240,6 @@ def run(width=300, height=300):
         redrawAll(canvas, data)
         canvas.update()
 
-    def mousePressedWrapper(event, canvas, data):
-        mousePressed(event, data)
-        redrawAllWrapper(canvas, data)
-
     def keyPressedWrapper(event, canvas, data):
         keyPressed(event, data)
         redrawAllWrapper(canvas, data)
@@ -256,17 +254,12 @@ def run(width=300, height=300):
     class Struct(object): pass
 
     data = Struct()
-    data.width = width
-    data.height = height
-    data.timerDelay = 600  # milliseconds
+    init(data, width, height)
     root = Tk()
-    init(data)
     # create the root and the canvas
     canvas = Canvas(root, width=data.width, height=data.height)
     canvas.pack()
     # set up events
-    root.bind("<Button-1>", lambda event:
-    mousePressedWrapper(event, canvas, data))
     root.bind("<Key>", lambda event:
     keyPressedWrapper(event, canvas, data))
     timerFiredWrapper(canvas, data)
@@ -274,22 +267,6 @@ def run(width=300, height=300):
     root.mainloop()  # blocks until window is closed
     print("bye!")
 
+if __name__ == "__main__":
+    playTeris(15, 10)
 
-run(250, 350)
-
-#################################################
-# Colab5 Test Functions
-#########################################################################
-
-
-#################################################
-# Colab5 Main
-################################################
-
-# def testAll():
-
-# def main():
-#    testAll()
-
-# if __name__ == '__main__':
-#    main()
