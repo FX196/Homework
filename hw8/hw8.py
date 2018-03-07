@@ -86,7 +86,7 @@ def instrumentedBinarySearch(lst,item):
         if lst[i] == item:
             find = True
         elif lst[i] < item:
-            i += (len(lst)-i-1)//2
+            i += (len(lst)-i)//2
         elif lst[i] > item:
             i = (len(lst)-i-1)//2
     return result
@@ -239,7 +239,7 @@ def testFriendsOfFriends():
 
 def testAll():
     testInstrumentedLinearSearch()
-    #testInstrumentedBinarySearch()
+    testInstrumentedBinarySearch()
     testContainsPythagoreanTriple()
     testIsPythagoreanTriple()
     testMovieAwards()
