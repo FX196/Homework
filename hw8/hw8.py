@@ -76,19 +76,25 @@ def instrumentedLinearSearch(lst,item):
 
 def instrumentedBinarySearch(lst,item):
     result = []
+    # sort the list before searching.
     lst = sorted(lst)
+    temp = lst
     find = False
-    i = (len(lst)-1)//2
-    if item not in lst:
-        return None
     while find == False:
-        result.append(i)
-        if lst[i] == item:
+        # always start from the middle, and round down when there is
+        # an even number list.
+        i = (len(temp)-1)//2
+        if i not in range(len(temp)):
+            break
+        result.append(lst.index(temp[i]))
+        if temp[i] == item:
             find = True
-        elif lst[i] < item:
-            i += (len(lst)-i)//2
-        elif lst[i] > item:
-            i = (len(lst)-i-1)//2
+        elif temp[i] < item:
+            # change the range of finding after each comparison.
+            temp = temp[i+1:]
+        elif temp[i] > item:
+            # change the range of finding after each comparison.
+            temp = temp[:i]
     return result
 
 def containsPythagoreanTriple(a):
@@ -151,7 +157,7 @@ def testInstrumentedBinarySearch():
     assert(instrumentedBinarySearch([2, 4, 6, 8, 10, 12, 14], 12) == [3,5])
     assert(instrumentedBinarySearch([2, 4, 6, 8, 10, 12, 14], 4) == [3,1])
     assert(instrumentedBinarySearch([1, 4, 2, 3, 10, 7, 6, 8], 6) == [3,5,4])
-    assert(instrumentedBinarySearch([2, 4, 6, 8, 10, 12, 14], 12) == [])
+    assert(instrumentedBinarySearch(['here', 'not'], 'look') == [0,1])
     print("Passed!")
 
 def testContainsPythagoreanTriple():
