@@ -197,6 +197,7 @@ class HumanPlayer(Player):
                     self._selected_block.highlighted = False
                     return 0
 
+
 class RandomPlayer(Player):
     # === Private Attributes ===
     # _selected_block
@@ -234,16 +235,15 @@ class RandomPlayer(Player):
 
         This method will hold focus until a valid move is performed.
         """
-        self._level = int(random()*board.max_depth)
-        location = (int(random()*board.size), int(random()*board.size))
+        self._level = int(random() * board.max_depth)
+        location = (int(random() * board.size), int(random() * board.size))
         self._selected_block = board.get_selected_block(location, self._level)
         self._selected_block.highligted = True
 
-
         self.renderer.draw(board, self.id)
         pygame.time.wait(TIME_DELAY)
-        move_num = int(random()*5)
-        
+        move_num = int(random() * 5)
+
         if move_num == 0:
             self._selected_block.swap(0)
         elif move_num == 1:
@@ -254,12 +254,13 @@ class RandomPlayer(Player):
             self._selected_block.rotate(3)
         elif move_num == 4:
             self._selected_block.smash()
-        
+
         self.renderer.draw(board, self.id)
         pygame.time.wait(TIME_DELAY)
         self._selected_block.highlighted = False
         return 0
-    
+
+
 class SmartPlayer(Player):
     # === Private Attributes ===
     # _selected_block
@@ -280,8 +281,8 @@ class SmartPlayer(Player):
     _level: int
     _moves_to_compare: int
 
-    def __init__(self, renderer: Renderer, player_id: int,\
-                  goal: Goal, difficulty: int) -> None:
+    def __init__(self, renderer: Renderer, player_id: int, \
+                 goal: Goal, difficulty: int) -> None:
         """Initialize this RandomPlayer with the given <renderer>, <player_id>
         and <goal>.
         """
@@ -305,17 +306,16 @@ class SmartPlayer(Player):
         elif difficulty >= 5:
             self._moves_to_compare = 150
 
-            
     def make_move(self, board: Block) -> int:
         moves, scores = [], []
         for _ in range(self._moves_to_compare):
-            self._level = int(random()*board.max_depth)
-            location = (int(random()*board.size),\
-                       int(random()*board.size))
+            self._level = int(random() * board.max_depth)
+            location = (int(random() * board.size), \
+                        int(random() * board.size))
             self._selected_block = \
-            board.get_selected_block(location, self._level)
-            move_num = int(random()*4)
-        
+                board.get_selected_block(location, self._level)
+            move_num = int(random() * 4)
+
             if move_num == 0:
                 self._selected_block.swap(0)
                 moves.append(((location, self._level), move_num))
@@ -336,16 +336,14 @@ class SmartPlayer(Player):
                 moves.append(((location, self._level), move_num))
                 scores.append(self.goal.score(board))
                 self._selected_block.rotate(1)
-        
-        
-        self._selected_block.highligted = True
 
+        self._selected_block.highligted = True
 
         self.renderer.draw(board, self.id)
         pygame.time.wait(TIME_DELAY)
         loc, move_num = moves[scores.index(max(scores))]
         self._selected_block = board.get_selected_block(loc[0], loc[1])
-        
+
         if move_num == 0:
             self._selected_block.swap(0)
         elif move_num == 1:
@@ -354,7 +352,7 @@ class SmartPlayer(Player):
             self._selected_block.rotate(1)
         elif move_num == 3:
             self._selected_block.rotate(3)
-        
+
         self.renderer.draw(board, self.id)
         pygame.time.wait(TIME_DELAY)
         self._selected_block.highlighted = False
@@ -363,6 +361,7 @@ class SmartPlayer(Player):
 
 if __name__ == '__main__':
     import python_ta
+
     python_ta.check_all(config={
         'allowed-io': ['process_event'],
         'allowed-import-modules': [

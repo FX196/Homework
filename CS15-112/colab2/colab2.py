@@ -3,24 +3,27 @@
 #################################################
 
 import cs112_s18_week2_linter
-import math
-import string
+
 
 #################################################
 # Helper functions
 #################################################
 
-def almostEqual(d1, d2, epsilon=10**-7):
+def almostEqual(d1, d2, epsilon=10 ** -7):
     # note: use math.isclose() outside 15-112 with Python version 3.5 or later
     return (abs(d2 - d1) < epsilon)
 
+
 import decimal
+
+
 def roundHalfUp(d):
     # Round to nearest with ties going away from zero.
     rounding = decimal.ROUND_HALF_UP
     # See other rounding options here:
     # https://docs.python.org/3/library/decimal.html#rounding-modes
     return int(decimal.Decimal(d).to_integral_value(rounding=rounding))
+
 
 #################################################
 # Colab2 problems
@@ -29,32 +32,38 @@ def roundHalfUp(d):
 def rotateNumber(x):
     return 42
 
+
 def isCircularPrime(x):
     return 42
+
 
 def nthCircularPrime(n):
     return 42
 
+
 def countLowercaseUpToPercent(s):
     return 42
+
 
 def longestCommonSubstring(s1, s2):
     return 42
 
+
 def gradebookSummary(gradebookFilename):
-    f=open(gradebookFilename,'r')
-    grades=f.read()
-    lines=grades.splitlines()
-    result=""
+    f = open(gradebookFilename, 'r')
+    grades = f.read()
+    lines = grades.splitlines()
+    result = ""
     for line in lines:
         if line != "" and line[0] != "#":
-            arr=line.split(",")
-            total=0.0
+            arr = line.split(",")
+            total = 0.0
             for score in arr[1:]:
-                total+=float(score)
-            avg=total/len(arr[1:])
-            result+=("%s\t%.2f\n" % (arr[0], avg))
-    return result[:len(result)-1]
+                total += float(score)
+            avg = total / len(arr[1:])
+            result += ("%s\t%.2f\n" % (arr[0], avg))
+    return result[:len(result) - 1]
+
 
 #################################################
 # Colab2 Test Functions
@@ -109,21 +118,24 @@ def testLongestCommonSubstring():
     assert(longestCommonSubstring("abcABC", "zzabZZAB") == "AB")
     print("Passed!")
 """
+
+
 def testGradebookSummary():
     print("Testing gradebookSummary()...", end="")
-    assert(gradebookSummary("sampleFiles/gradebook1.txt") == 
+    assert (gradebookSummary("sampleFiles/gradebook1.txt") ==
             "wilma\t92.67\nfred\t90.40\nbetty\t88.00")
-    assert(gradebookSummary("sampleFiles/gradebook2.txt") == 
+    assert (gradebookSummary("sampleFiles/gradebook2.txt") ==
             "wilma\t92.67\nfred\t90.40\nbetty\t88.00")
-    assert(gradebookSummary("sampleFiles/small1.txt") == 
+    assert (gradebookSummary("sampleFiles/small1.txt") ==
             "fred\t0.00")
-    assert(gradebookSummary("sampleFiles/small2.txt") == 
+    assert (gradebookSummary("sampleFiles/small2.txt") ==
             "fred\t-1.00\nwilma\t-2.00")
-    assert(gradebookSummary("sampleFiles/small3.txt") == 
+    assert (gradebookSummary("sampleFiles/small3.txt") ==
             "fred\t100.50")
-    assert(gradebookSummary("sampleFiles/small4.txt") == 
+    assert (gradebookSummary("sampleFiles/small4.txt") ==
             "fred\t49.00\nwilma\t50.00")
     print("Passed!")
+
 
 #################################################
 # Colab2 Main
@@ -132,9 +144,11 @@ def testGradebookSummary():
 def testAll():
     testGradebookSummary()
 
+
 def main():
-    cs112_s18_week2_linter.lint() # check style rules
+    cs112_s18_week2_linter.lint()  # check style rules
     testAll()
+
 
 if __name__ == '__main__':
     main()

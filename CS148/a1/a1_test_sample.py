@@ -18,11 +18,12 @@ please see
 Note: this file is for support purposes only, and is not part of your
 submission.
 """
-from datetime import datetime, timedelta
 import os
+from datetime import datetime
+
 import pygame
-from pytest import approx
 from bikeshare import Ride, Station
+from pytest import approx
 from simulation import Simulation, create_stations, create_rides
 
 
@@ -95,9 +96,9 @@ def test_get_position_ride():
     # (-73.54628920555115, 45.57713595014113).
     # We're checking the position after 10 minutes have passed.
     assert (
-        ride.get_position(datetime(2017, 6, 1, 7, 41, 0)) ==
-        approx((-73.5555326546, 45.5549952827),
-               abs=1e-5)
+            ride.get_position(datetime(2017, 6, 1, 7, 41, 0)) ==
+            approx((-73.5555326546, 45.5549952827),
+                   abs=1e-5)
     )
 
 
@@ -111,7 +112,7 @@ def test_statistics_simple():
     in the time range 9:30 to 9:45, in which there's only
     one ride (the very last ride in the file).
     """
-    os.environ['SDL_VIDEODRIVER'] = 'dummy'                 # Ignore this line
+    os.environ['SDL_VIDEODRIVER'] = 'dummy'  # Ignore this line
     sim = Simulation('stations.json', 'sample_rides.csv')
     pygame.event.post(pygame.event.Event(pygame.QUIT, {}))  # Ignore this line
 
@@ -152,7 +153,7 @@ def test_statistics_simple():
 def test_ride_ends_outside_run():
     """Test a special case: when a ride ends outside the run period.
     """
-    os.environ['SDL_VIDEODRIVER'] = 'dummy'                 # Ignore this line
+    os.environ['SDL_VIDEODRIVER'] = 'dummy'  # Ignore this line
     sim = Simulation('stations.json', 'sample_rides.csv')
     pygame.event.post(pygame.event.Event(pygame.QUIT, {}))  # Ignore this line
 
@@ -179,4 +180,5 @@ def test_ride_ends_outside_run():
 
 if __name__ == '__main__':
     import pytest
+
     pytest.main(['a1_test_sample.py'])

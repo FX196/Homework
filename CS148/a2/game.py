@@ -16,6 +16,7 @@ can call to try playing the game in several different configurations.
 """
 import random
 from typing import List
+
 from block import Block, random_init
 from goal import BlobGoal, PerimeterGoal
 from player import Player, HumanPlayer, RandomPlayer, SmartPlayer
@@ -52,51 +53,50 @@ class Game:
         """
         self.board = random_init(0, max_depth)
         self.board.update_block_locations((0, 0), BOARD_WIDTH)
-        num_players = num_human + random_players +len(smart_players)
+        num_players = num_human + random_players + len(smart_players)
         self.renderer = Renderer(num_players)
         self.players = []
         if random.random() < 0.5:
             for i in range(num_human):
-                target =\
-                 COLOUR_LIST[int(random.random()*len(COLOUR_LIST))]
-                self.players.append(HumanPlayer(self.renderer,\
-                                                 len(self.players),\
-                                                  BlobGoal(target)))
+                target = \
+                    COLOUR_LIST[int(random.random() * len(COLOUR_LIST))]
+                self.players.append(HumanPlayer(self.renderer, \
+                                                len(self.players), \
+                                                BlobGoal(target)))
             for i in range(random_players):
-                target =\
-                 COLOUR_LIST[int(random.random()*len(COLOUR_LIST))]
-                self.players.append(RandomPlayer(self.renderer,\
-                                                  len(self.players),\
-                                                   BlobGoal(target)))
+                target = \
+                    COLOUR_LIST[int(random.random() * len(COLOUR_LIST))]
+                self.players.append(RandomPlayer(self.renderer, \
+                                                 len(self.players), \
+                                                 BlobGoal(target)))
             for i in smart_players:
-                target =\
-                 COLOUR_LIST[int(random.random()*len(COLOUR_LIST))]
-                self.players.append(SmartPlayer(self.renderer,\
-                                                 len(self.players),\
-                                                  BlobGoal(target),\
-                                                   i))
+                target = \
+                    COLOUR_LIST[int(random.random() * len(COLOUR_LIST))]
+                self.players.append(SmartPlayer(self.renderer, \
+                                                len(self.players), \
+                                                BlobGoal(target), \
+                                                i))
         else:
             for i in range(num_human):
-                target =\
-                 COLOUR_LIST[int(random.random()*len(COLOUR_LIST))]
-                self.players.append(HumanPlayer(self.renderer,\
-                                                 len(self.players),\
-                                                  PerimeterGoal(target)))
+                target = \
+                    COLOUR_LIST[int(random.random() * len(COLOUR_LIST))]
+                self.players.append(HumanPlayer(self.renderer, \
+                                                len(self.players), \
+                                                PerimeterGoal(target)))
             for i in range(random_players):
-                target =\
-                 COLOUR_LIST[int(random.random()*len(COLOUR_LIST))]
-                self.players.append(RandomPlayer(self.renderer,\
-                                                  len(self.players),\
-                                                   PerimeterGoal(target)))
+                target = \
+                    COLOUR_LIST[int(random.random() * len(COLOUR_LIST))]
+                self.players.append(RandomPlayer(self.renderer, \
+                                                 len(self.players), \
+                                                 PerimeterGoal(target)))
             for i in smart_players:
-                target =\
-                 COLOUR_LIST[int(random.random()*len(COLOUR_LIST))]
-                self.players.append(SmartPlayer(self.renderer,\
-                                                 len(self.players),\
-                                                  PerimeterGoal(target),\
-                                                   i))
+                target = \
+                    COLOUR_LIST[int(random.random() * len(COLOUR_LIST))]
+                self.players.append(SmartPlayer(self.renderer, \
+                                                len(self.players), \
+                                                PerimeterGoal(target), \
+                                                i))
         self.renderer.draw(self.board, 0)
-        
 
     def run_game(self, num_turns: int) -> None:
         """Run the game for the number of turns specified.
@@ -140,6 +140,7 @@ class Game:
                   f'goal = \n\t{player.goal.description()}: ' +
                   f'{colour_name(player.goal.colour)}')
 
+
 def auto_game() -> None:
     """Run a game with two computer players of different difficulty.
     """
@@ -175,6 +176,7 @@ def sample_game() -> None:
 
 if __name__ == '__main__':
     import python_ta
+
     python_ta.check_all(config={
         'allowed-io': ['run_game'],
         'allowed-import-modules': [
@@ -182,6 +184,6 @@ if __name__ == '__main__':
             'block', 'goal', 'player', 'renderer'
         ]})
     # sample_game()
-    #auto_game()
-    #two_player_game()
+    # auto_game()
+    # two_player_game()
     # solitaire_game()

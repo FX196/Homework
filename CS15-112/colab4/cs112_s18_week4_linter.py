@@ -17,10 +17,14 @@ _bannedTokens = (
         'setattr,slice,staticmethod,super,' +
         'type,vars,importlib,imp,{,}')
 
-import math, sys, traceback, inspect, parser
+import inspect
+import parser
 import platform
+import sys
+
 
 class _AssertionError(AssertionError): pass
+
 
 def _formatError(header, file, line, fn, text, msg, expl):
     messages = ['\n******************************']
@@ -34,22 +38,24 @@ def _formatError(header, file, line, fn, text, msg, expl):
     message = '\n'.join(messages)
     return message
 
+
 class _LintError(Exception):
     def __init__(self, errors):
-        messages = [ '' ]
-        for i,e in enumerate(errors):
+        messages = ['']
+        for i, e in enumerate(errors):
             (msg, file, line, fn, text, expl) = e
-            header = 'LintError #%d of %d:' % (i+1, len(errors))
+            header = 'LintError #%d of %d:' % (i + 1, len(errors))
             message = _formatError(header, file, line, fn, text, msg, expl)
             messages.append(message)
         message = ''.join(messages)
         super().__init__(message)
 
+
 class _Linter(object):
     def __init__(self, code=None, filename=None, bannedTokens=None):
         self.code = code
         self.filename = filename
-        self.bannedTokens = set(bannedTokens or [ ])
+        self.bannedTokens = set(bannedTokens or [])
         self.issuedRoundOopsMessage = False
 
     def roundOops(self, node):
@@ -59,7 +65,7 @@ class _Linter(object):
             expl = ''
         else:
             self.issuedRoundOopsMessage = True
-            expl= '''The behavior of "round" in Python 3 may be unexpected.  
+            expl = '''The behavior of "round" in Python 3 may be unexpected.  
 \t\t\tFor example:
 \t\t\t   round(1.5) returns 2
 \t\t\t   round(2.5) returns 2
@@ -73,9 +79,9 @@ class _Linter(object):
             (nodeTid, nodeText, nodeLine, nodeCol) = node
             line = nodeLine
         if ((text == None) and
-            (line != None) and
-            (1 <= line <= len(self.lines))):
-            text = self.lines[line-1]
+                (line != None) and
+                (1 <= line <= len(self.lines))):
+            text = self.lines[line - 1]
         self.errors.append((msg, self.filename, line, fn, text, expl))
 
     def lintLineWidths(self):
@@ -85,7 +91,7 @@ class _Linter(object):
                 msg = 'Line width is >80 characters'
                 expl = "You may not have a line of code longer than 80 characters."
                 self.oops(msg, expl,
-                          line=i+1, text='\n'+line[:81]+'...')
+                          line=i + 1, text='\n' + line[:81] + '...')
 
     def lintTopLevel(self):
         # only allow import, from...import, def, class, and if...main()
@@ -93,7 +99,7 @@ class _Linter(object):
             if (not isinstance(topLevelNodeList, list)):
                 msg = 'Non-list top-level node list!'
                 expl = ("You are doing something strange and you program is "
-                       "invalid. Go to Office Hours.")
+                        "invalid. Go to Office Hours.")
                 self.oops(msg, expl, node=topLevelNode)
             topLevelNode = topLevelNodeList[0]
             if (isinstance(topLevelNode, int)):
@@ -101,14 +107,14 @@ class _Linter(object):
                 if (topLevelNode == 3):
                     text = 'top-level-string'
             elif isinstance(topLevelNode, list) and \
-                isinstance(topLevelNode[0], list) and \
-                len(topLevelNode[0]) == 4 and topLevelNode[0][1] == "@":
+                    isinstance(topLevelNode[0], list) and \
+                    len(topLevelNode[0]) == 4 and topLevelNode[0][1] == "@":
                 (tid, text, line, col) = topLevelNode[0]
-            elif ((type(topLevelNode) not in [list,tuple]) or
+            elif ((type(topLevelNode) not in [list, tuple]) or
                   (len(topLevelNode) != 4)):
                 msg = 'Unknown type of top-level code: %r' % topLevelNode
                 expl = ("You are doing something strange and you program is "
-                       "invalid. Go to Office Hours.")                      
+                        "invalid. Go to Office Hours.")
                 self.oops(msg, expl)
                 continue
             else:
@@ -117,8 +123,8 @@ class _Linter(object):
                              'class', 'top-level-string']):
                 msg = "Top-level code that is not import, def, or class."
                 expl = ("All of your code should be inside of a function. "
-                       "If you want to make sure\n\t\t\tsomething runs "
-                       "everytime, add it to main().")
+                        "If you want to make sure\n\t\t\tsomething runs "
+                        "everytime, add it to main().")
                 self.oops(msg, expl, node=topLevelNode)
 
     def lintAllLevels(self, astList):
@@ -132,24 +138,25 @@ class _Linter(object):
             elif (text in self.bannedTokens):
                 msg = 'Disallowed token: "%s"' % text
                 expl = ("You are using a feature of Python that is not allowed "
-                       "in this\n\t\t\tassignment. You will need to solve this "
-                       "assignment without using\n\t\t\tthat feature.")
-                self.oops(msg, expl, node=node)            
+                        "in this\n\t\t\tassignment. You will need to solve this "
+                        "assignment without using\n\t\t\tthat feature.")
+                self.oops(msg, expl, node=node)
 
     def lint(self):
         print('Linting... ', end='')
-        self.errors = [ ]
+        self.errors = []
         if (self.code == None):
             with open(self.filename, 'rt') as f:
-                try: self.code = f.read()
+                try:
+                    self.code = f.read()
                 except UnicodeDecodeError as e:
                     msg = 'Non-Ascii Character in File:\n' + str(e)
                     expl = ("This usually means something got corrupted in "
                             "your file\n\t\t\t and you should remove the "
                             "corrupted portions or\n\t\t\t start a new file.")
-                    self.oops(msg,expl)
+                    self.oops(msg, expl)
                     raise _LintError(self.errors)
-        if (self.code in [None,'']):
+        if (self.code in [None, '']):
             self.oops('Could not read code from "%s"' % self.filename)
             raise _LintError(self.errors)
         self.lines = self.code.splitlines()
@@ -160,22 +167,22 @@ class _Linter(object):
         # allow if...main() last line...
         if (self.astTextOnlyList[-1] in [
             ['if', ['__name__', '==', "'__main__'"],
-                   ':', ['main', ['(', ')']]],
+             ':', ['main', ['(', ')']]],
             ['if', ['(', ['__name__', '==', "'__main__'"], ')'],
-                   ':', ['main', ['(', ')']]],
+             ':', ['main', ['(', ')']]],
             ['if', ['__name__', '==', '"__main__"'],
-                   ':', ['main', ['(', ')']]],
+             ':', ['main', ['(', ')']]],
             ['if', ['(', ['__name__', '==', '"__main__"'], ')'],
-                   ':', ['main', ['(', ')']]]
-            ]):
+             ':', ['main', ['(', ')']]]
+        ]):
             # just remove it...
             self.astTextOnlyList.pop()
             self.astList.pop()
         # now do the actual linting...
         self.lintLineWidths()
-        self.lintTopLevel() # just import, def, class, or if...main()
+        self.lintTopLevel()  # just import, def, class, or if...main()
         self.lintAllLevels(self.astList)
-        if (self.errors != [ ]):
+        if (self.errors != []):
             raise _LintError(self.errors)
         print("Passed!")
 
@@ -186,13 +193,14 @@ class _Linter(object):
             if (result == ''): result = None
             if ((not textOnly) and (result != None)): result = ast
             return result
-        result = [ ]
+        result = []
         for val in ast:
             node = self.buildSimpleAST(val, textOnly)
             if (node != None):
                 result.append(node)
         if (len(result) == 1): result = result[0]
         return result
+
 
 def lint(code=None, filename=None, bannedTokens=_bannedTokens):
     if (isinstance(bannedTokens, str)):
@@ -216,11 +224,13 @@ def lint(code=None, filename=None, bannedTokens=_bannedTokens):
         lintError.__traceback__ = None
         raise lintError
 
+
 def _printImportReport():
     print('Importing %s in Python %s' % (_module, platform.python_version()))
     (major, minor, micro, releaselevel, serial) = sys.version_info
     if (major < 3):
         raise Exception("You must use Python 3, not Python 2!")
+
 
 if (__name__ != '__main__'):
     _printImportReport()

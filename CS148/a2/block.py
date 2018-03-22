@@ -10,11 +10,11 @@ University of Toronto
 
 This file contains the Block class, the main data structure used in the game.
 """
-import random
 import math
+import random
 from typing import Optional, Tuple, List
-from renderer import COLOUR_LIST, TEMPTING_TURQUOISE, BLACK, colour_name
 
+from renderer import COLOUR_LIST, TEMPTING_TURQUOISE, BLACK, colour_name
 
 HIGHLIGHT_COLOUR = TEMPTING_TURQUOISE
 FRAME_COLOUR = BLACK
@@ -137,8 +137,8 @@ class Block:
             l.append((self.colour, self.position, (self.size, self.size), 0))
             l.append((FRAME_COLOUR, self.position, (self.size, self.size), 3))
             if self.highlighted:
-                l.append((HIGHLIGHT_COLOUR,\
-                           self.position, (self.size, self.size), 5))
+                l.append((HIGHLIGHT_COLOUR, \
+                          self.position, (self.size, self.size), 5))
         return l
 
     def swap(self, direction: int) -> None:
@@ -194,7 +194,7 @@ class Block:
         if self.level != 0 and self.level != self.max_depth:
             children = []
             for _ in range(4):
-                children.append(random_init(self.level+1, self.max_depth))
+                children.append(random_init(self.level + 1, self.max_depth))
             self.children = children
             self.update_block_locations(self.position, self.size)
         return False
@@ -213,19 +213,18 @@ class Block:
         self.position = top_left
         self.size = size
         if len(self.children) > 0:
-            self.children[0].\
-            update_block_locations((top_left[0]+size/2,\
-                                     top_left[1]), self.size/2)
-            self.children[1].\
-            update_block_locations((top_left[0],\
-                                     top_left[1]), self.size/2)
-            self.children[2].\
-            update_block_locations((top_left[0],\
-                                     top_left[1]+size/2), self.size/2)
-            self.children[3].\
-            update_block_locations((top_left[0]+size/2,\
-                                     top_left[1]+size/2), self.size/2)
-            
+            self.children[0]. \
+                update_block_locations((top_left[0] + size / 2, \
+                                        top_left[1]), self.size / 2)
+            self.children[1]. \
+                update_block_locations((top_left[0], \
+                                        top_left[1]), self.size / 2)
+            self.children[2]. \
+                update_block_locations((top_left[0], \
+                                        top_left[1] + size / 2), self.size / 2)
+            self.children[3]. \
+                update_block_locations((top_left[0] + size / 2, \
+                                        top_left[1] + size / 2), self.size / 2)
 
     def get_selected_block(self, location: Tuple[int, int], level: int) \
             -> 'Block':
@@ -245,10 +244,10 @@ class Block:
         - 0 <= level <= max_depth
         """
         if self.position[0] < location[0] \
-        and self.position[0]+self.size > location[0]\
-         and self.position[1] < location[1] \
-            and self.position[1]+self.size > location[1] \
-            and self.level < level:
+                and self.position[0] + self.size > location[0] \
+                and self.position[1] < location[1] \
+                and self.position[1] + self.size > location[1] \
+                and self.level < level:
             for child in self.children:
                 b = child.get_selected_block(location, level)
                 if b:
@@ -271,18 +270,18 @@ class Block:
         """
         l = []
         r = []
-        for _ in range(2**(self.max_depth-self.level)):
+        for _ in range(2 ** (self.max_depth - self.level)):
             r.append(None)
-        for _ in range(2**(self.max_depth-self.level)):
+        for _ in range(2 ** (self.max_depth - self.level)):
             l.append(r.copy())
 
         flat_size = len(l)
         if len(self.children) > 0:
-            child_size = int(flat_size/2)
+            child_size = int(flat_size / 2)
             flattened = self.children[0].flatten()
             for i in range(child_size):
                 for j in range(child_size):
-                    l[(child_size+i)][j] = flattened[i][j]
+                    l[(child_size + i)][j] = flattened[i][j]
             flattened = self.children[1].flatten()
             for i in range(child_size):
                 for j in range(child_size):
@@ -290,24 +289,25 @@ class Block:
             flattened = self.children[2].flatten()
             for i in range(child_size):
                 for j in range(child_size):
-                    l[i][(j+child_size)] = flattened[i][j]
+                    l[i][(j + child_size)] = flattened[i][j]
             flattened = self.children[3].flatten()
             for i in range(child_size):
                 for j in range(child_size):
-                    l[(child_size+i)][(child_size+j)] = flattened[i][j]
+                    l[(child_size + i)][(child_size + j)] = flattened[i][j]
         else:
             for i in range(flat_size):
                 for j in range(flat_size):
                     l[i][j] = self.colour
         return l
-    
+
     def __str__(self):
         s = ''
-        s += "Colour="+str(self.colour)
-        s += " Position="+str(self.position)
-        s += " Size="+str(self.size)
-        s += " Level="+str(self.level)
+        s += "Colour=" + str(self.colour)
+        s += " Position=" + str(self.position)
+        s += " Size=" + str(self.size)
+        s += " Level=" + str(self.level)
         return s
+
 
 def random_init(level: int, max_depth: int) -> 'Block':
     """Return a randomly-generated Block with level <level> and subdivided
@@ -324,20 +324,20 @@ def random_init(level: int, max_depth: int) -> 'Block':
         b = Block(level)
         b.max_depth = max_depth
         num = random.random()
-        if num < math.exp(-0.25 * level):    #subdivide
+        if num < math.exp(-0.25 * level):  # subdivide
             children = []
             for _ in range(4):
-                children.append(random_init(level+1, max_depth))
+                children.append(random_init(level + 1, max_depth))
             b.children = children
-        else:                               #no subdivision
-            colour = int(random.random()*len(COLOUR_LIST))
+        else:  # no subdivision
+            colour = int(random.random() * len(COLOUR_LIST))
             b.colour = COLOUR_LIST[colour]
         return b
     elif level == max_depth:
         b = Block(level)
         b.max_depth = max_depth
         num = random.random()
-        colour = int(random.random()*len(COLOUR_LIST))
+        colour = int(random.random() * len(COLOUR_LIST))
         b.colour = COLOUR_LIST[colour]
         return b
 
@@ -386,8 +386,10 @@ def print_block_indented(b: Block, indent: int, verbose) -> None:
         for child in b.children:
             print_block_indented(child, indent + 1, verbose)
 
+
 if __name__ == '__main__':
     import python_ta
+
     python_ta.check_all(config={
         'allowed-io': ['print_block_indented'],
         'allowed-import-modules': [

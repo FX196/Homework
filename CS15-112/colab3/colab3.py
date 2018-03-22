@@ -2,24 +2,30 @@
 # Colab3
 #################################################
 
-import cs112_s18_week3_linter
 import string
+
+import cs112_s18_week3_linter
+
 
 #################################################
 # Helper functions
 #################################################
 
-def almostEqual(d1, d2, epsilon=10**-7):
+def almostEqual(d1, d2, epsilon=10 ** -7):
     # note: use math.isclose() outside 15-112 with Python version 3.5 or later
     return (abs(d2 - d1) < epsilon)
 
+
 import decimal
+
+
 def roundHalfUp(d):
     # Round to nearest with ties going away from zero.
     rounding = decimal.ROUND_HALF_UP
     # See other rounding options here:
     # https://docs.python.org/3/library/decimal.html#rounding-modes
     return int(decimal.Decimal(d).to_integral_value(rounding=rounding))
+
 
 #################################################
 # Colab3 problems
@@ -29,6 +35,7 @@ def roundHalfUp(d):
 
 def testIsEquidigital(isEquidigital):
     return 42
+
 
 ### DEBUGGING PROBLEMS ###
 ### NOTE: remove the triple-quotes before you start debugging. ###
@@ -66,6 +73,7 @@ def largestNumber(s):
                 n = biggest
     return biggest"""
 
+
 ### STYLE PROBLEM ###
 
 def areAnagrams(s1, s2):
@@ -87,10 +95,12 @@ def areAnagrams(s1, s2):
                 return False
         return True
 
+
 ### ALGORITHMIC THINKING ###
 
 def nthKaprekarNumber(n):
     return 42
+
 
 def splitString(s):
     s = s.lower()
@@ -101,36 +111,32 @@ def splitString(s):
         else:
             strList += ("%d,%s " % (s.count(s[0]), s[0]))
             s = s.replace(s[0], '')
-    return strList[:len(s)-1]
+    return strList[:len(s) - 1]
+
 
 def mostFrequentLetters(s):
     if s == "":
         return ""
     else:
-        result=""
-        arr=splitString(s).split(" ")
+        result = ""
+        arr = splitString(s).split(" ")
         for i in range(len(arr)):
-            element=arr[i].split(',')
-            arr[i]=(element[0],element[1])
-        n=0
+            element = arr[i].split(',')
+            arr[i] = (element[0], element[1])
+        n = 0
         while arr:
-            maxElement=max(arr)
-            if maxElement[0] >n:
-                result=result+maxElement[1]
+            maxElement = max(arr)
+            if maxElement[0] > n:
+                result = result + maxElement[1]
             else:
-                n=maxElement[0]
-                result=maxElement[1]+result
-            index=arr.index(maxElement)
-            if index != len(arr)-1:
-                arr=arr[:index]+arr[index+1:]
+                n = maxElement[0]
+                result = maxElement[1] + result
+            index = arr.index(maxElement)
+            if index != len(arr) - 1:
+                arr = arr[:index] + arr[index + 1:]
             else:
-                arr=arr[:len(arr)-1]
+                arr = arr[:len(arr) - 1]
         return result
-
-
-
-
-
 
 
 #################################################
@@ -277,34 +283,38 @@ def testNthKaprekarNumber():
     assert(nthKaprekarNumber(7) == 999)
     print('Passed.')
 """
+
+
 def testMostFrequentLetters():
     print("Testing mostFrequentLetters()...", end="")
-    
+
     s = "We attack at Dawn"
     result = "atwcdekn"
-    assert(mostFrequentLetters(s) == result)
-    
+    assert (mostFrequentLetters(s) == result)
+
     s = "Note that digits, punctuation, and whitespace are not letters!"
     result = "teanioscdhpruglw"
-    assert(mostFrequentLetters(s) == result)
-    
+    assert (mostFrequentLetters(s) == result)
+
     s = ""
     result = ""
-    assert(mostFrequentLetters(s) == result)
-    
+    assert (mostFrequentLetters(s) == result)
+
     print("Passed!")
+
 
 #################################################
 # Colab3 Main
 ################################################
 
 def testAll():
-
     testMostFrequentLetters()
 
+
 def main():
-    cs112_s18_week3_linter.lint() # check style rules
+    cs112_s18_week3_linter.lint()  # check style rules
     testAll()
+
 
 if __name__ == '__main__':
     main()

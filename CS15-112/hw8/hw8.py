@@ -2,25 +2,27 @@
 # Zhuqing Yang (zhuqingy) Section E 
 # Hw8
 #################################################
-import math
-import string
-import copy
+
 
 #################################################
 # Helper functions
 #################################################
 
-def almostEqual(d1, d2, epsilon=10**-7):
+def almostEqual(d1, d2, epsilon=10 ** -7):
     # note: use math.isclose() outside 15-112 with Python version 3.5 or later
     return (abs(d2 - d1) < epsilon)
 
+
 import decimal
+
+
 def roundHalfUp(d):
     # Round to nearest with ties going away from zero.
     rounding = decimal.ROUND_HALF_UP
     # See other rounding options here:
     # https://docs.python.org/3/library/decimal.html#rounding-modes
     return int(decimal.Decimal(d).to_integral_value(rounding=rounding))
+
 
 #################################################
 # Hw8 problems
@@ -61,8 +63,7 @@ def slow3(s): # N is the length of the string s
 '''
 
 
-
-def instrumentedLinearSearch(lst,item):
+def instrumentedLinearSearch(lst, item):
     result = []
     if item not in lst:
         return None
@@ -74,7 +75,8 @@ def instrumentedLinearSearch(lst,item):
             break
     return result
 
-def instrumentedBinarySearch(lst,item):
+
+def instrumentedBinarySearch(lst, item):
     result = []
     # sort the list before searching.
     lst = sorted(lst)
@@ -83,7 +85,7 @@ def instrumentedBinarySearch(lst,item):
     while find == False:
         # always start from the middle, and round down when there is
         # an even number list.
-        i = (len(temp)-1)//2
+        i = (len(temp) - 1) // 2
         if i not in range(len(temp)):
             break
         result.append(lst.index(temp[i]))
@@ -91,28 +93,30 @@ def instrumentedBinarySearch(lst,item):
             find = True
         elif temp[i] < item:
             # change the range of finding after each comparison.
-            temp = temp[i+1:]
+            temp = temp[i + 1:]
         elif temp[i] > item:
             # change the range of finding after each comparison.
             temp = temp[:i]
     return result
 
+
 def containsPythagoreanTriple(a):
     count = 0
     for i in range(len(a)):
-        for j in range(1,len(a)):
-            for k in range(2,len(a)):
-                if isPythagoreanTriple(a[i],a[j],a[k]):
+        for j in range(1, len(a)):
+            for k in range(2, len(a)):
+                if isPythagoreanTriple(a[i], a[j], a[k]):
                     count += 1
     if count >= 1:
         return True
     return False
 
-    
-def isPythagoreanTriple(a,b,c):
-    if a**2+b**2==c**2 or a**2+c**2==b**2 or b**2+c**2==a**2:
+
+def isPythagoreanTriple(a, b, c):
+    if a ** 2 + b ** 2 == c ** 2 or a ** 2 + c ** 2 == b ** 2 or b ** 2 + c ** 2 == a ** 2:
         return True
     return False
+
 
 def movieAwards(oscarResults):
     d = dict()
@@ -121,14 +125,14 @@ def movieAwards(oscarResults):
         movieList.append(i[1])
     movieSet = set(movieList)
     for movie in movieSet:
-        d[movie]=set()
+        d[movie] = set()
     for award in oscarResults:
-        d[award[1]]=d[award[1]].union({award[0]})
+        d[award[1]] = d[award[1]].union({award[0]})
     return d
 
 
 def friendsOfFriends(d):
-    res={}
+    res = {}
     for person in d:
         res[person] = set()
         for friend in d[person]:
@@ -136,107 +140,106 @@ def friendsOfFriends(d):
         res[person] = res[person].difference(d[person].union({person}))
     return res
 
-    
-    
-
-
 
 #################################################
 # Hw8 Test Functions
 #################################################
 def testInstrumentedLinearSearch():
     print("Testing instrumentedLinearSearch()...", end="")
-    assert(instrumentedLinearSearch([2, 4, 6, 8, 10, 12], 8) == [0,1,2,3])
-    assert(instrumentedLinearSearch([2, 4, 6, 8, 10, 12], 6) == [0,1,2])
-    assert(instrumentedLinearSearch([1,4,7,8,5,15,12,3], 5) == [0,1,2,3,4])
-    assert(instrumentedLinearSearch([2, 4, 6, 8, 10, 12], 9) == None)
+    assert (instrumentedLinearSearch([2, 4, 6, 8, 10, 12], 8) == [0, 1, 2, 3])
+    assert (instrumentedLinearSearch([2, 4, 6, 8, 10, 12], 6) == [0, 1, 2])
+    assert (instrumentedLinearSearch([1, 4, 7, 8, 5, 15, 12, 3], 5) == [0, 1, 2, 3, 4])
+    assert (instrumentedLinearSearch([2, 4, 6, 8, 10, 12], 9) == None)
     print("Passed!")
+
 
 def testInstrumentedBinarySearch():
     print("Testing instrumentedBinarySearch()...", end="")
-    assert(instrumentedBinarySearch([2, 4, 6, 8, 10, 12, 14], 12) == [3,5])
-    assert(instrumentedBinarySearch([2, 4, 6, 8, 10, 12, 14], 4) == [3,1])
-    assert(instrumentedBinarySearch([1, 4, 2, 3, 10, 7, 6, 8], 6) == [3,5,4])
-    assert(instrumentedBinarySearch(['here', 'not'], 'look') == [0,1])
+    assert (instrumentedBinarySearch([2, 4, 6, 8, 10, 12, 14], 12) == [3, 5])
+    assert (instrumentedBinarySearch([2, 4, 6, 8, 10, 12, 14], 4) == [3, 1])
+    assert (instrumentedBinarySearch([1, 4, 2, 3, 10, 7, 6, 8], 6) == [3, 5, 4])
+    assert (instrumentedBinarySearch(['here', 'not'], 'look') == [0, 1])
     print("Passed!")
+
 
 def testContainsPythagoreanTriple():
     print("Testing containsPythagoreanTriple()...", end="")
-    assert(containsPythagoreanTriple([1,3,6,2,5,1,4]) == True)
-    assert(containsPythagoreanTriple([1,3,6,2,3,1,4]) == False)
-    assert(containsPythagoreanTriple([1,13,6,12,5,1,4]) == True)
-    assert(containsPythagoreanTriple([1,3,4,12,5,13,4]) == True)
+    assert (containsPythagoreanTriple([1, 3, 6, 2, 5, 1, 4]) == True)
+    assert (containsPythagoreanTriple([1, 3, 6, 2, 3, 1, 4]) == False)
+    assert (containsPythagoreanTriple([1, 13, 6, 12, 5, 1, 4]) == True)
+    assert (containsPythagoreanTriple([1, 3, 4, 12, 5, 13, 4]) == True)
     print("Passed!")
+
 
 def testIsPythagoreanTriple():
     print("Testing isPythagoreanTriple()...", end="")
-    assert(isPythagoreanTriple(3,4,5) == True)
-    assert(isPythagoreanTriple(1,4,5) == False)
-    assert(isPythagoreanTriple(5,12,13) == True)
-    assert(isPythagoreanTriple(0,0,0,) == True)
+    assert (isPythagoreanTriple(3, 4, 5) == True)
+    assert (isPythagoreanTriple(1, 4, 5) == False)
+    assert (isPythagoreanTriple(5, 12, 13) == True)
+    assert (isPythagoreanTriple(0, 0, 0, ) == True)
     print("Passed!")
 
 
-awards1 = { 
-    ("Best Picture", "The Shape of Water"), 
+awards1 = {
+    ("Best Picture", "The Shape of Water"),
     ("Best Actor", "Darkest Hour"),
     ("Best Actress", "Three Billboards Outside Ebbing, Missouri"),
     ("Best Director", "The Shape of Water")
-  }
-dicawards1 = { 
-    "Darkest Hour" : { "Best Actor" },
-    "Three Billboards Outside Ebbing, Missouri" : { "Best Actress" },
-    "The Shape of Water" : { "Best Director", "Best Picture" }
-  }
+}
+dicawards1 = {
+    "Darkest Hour": {"Best Actor"},
+    "Three Billboards Outside Ebbing, Missouri": {"Best Actress"},
+    "The Shape of Water": {"Best Director", "Best Picture"}
+}
 
-awards2 = { 
-    ("Best Picture", "La La Land"), 
+awards2 = {
+    ("Best Picture", "La La Land"),
     ("Best Actor", "Manchester by the Sea"),
     ("Best Actress", "La La Land"),
     ("Best Director", "La La Land"),
     ("Best Music", "La La Land")
-  }
+}
 
-dicawards2 = { 
-    "La La Land" : {"Best Actress","Best Picture","Best Director","Best Music"},
-    "Manchester by the Sea" : { "Best Actor" }
-  }
+dicawards2 = {
+    "La La Land": {"Best Actress", "Best Picture", "Best Director", "Best Music"},
+    "Manchester by the Sea": {"Best Actor"}
+}
+
 
 def testMovieAwards():
     print("Testing movieAwards()...", end="")
-    assert(movieAwards(awards1) == dicawards1)
-    assert(movieAwards(awards2) == dicawards2)
-    assert(movieAwards(dict()) == dict())
+    assert (movieAwards(awards1) == dicawards1)
+    assert (movieAwards(awards2) == dicawards2)
+    assert (movieAwards(dict()) == dict())
     print("Passed!")
 
-a = { }
-a["jon"] = set(["arya", "tyrion"])    
+
+a = {}
+a["jon"] = set(["arya", "tyrion"])
 a["tyrion"] = set(["jon", "jaime", "pod"])
-a["arya"] = set(["jon"])    
+a["arya"] = set(["jon"])
 a["jaime"] = set(["tyrion", "brienne"])
 a["brienne"] = set(["jaime", "pod"])
 a["pod"] = set(["tyrion", "brienne", "jaime"])
 a["ramsay"] = set()
 
 a1 = {
- 'tyrion': {'arya', 'brienne'}, 
- 'pod': {'jon'}, 
- 'brienne': {'tyrion'}, 
- 'arya': {'tyrion'}, 
- 'jon': {'pod', 'jaime'}, 
- 'jaime': {'pod', 'jon'}, 
- 'ramsay': set()
+    'tyrion': {'arya', 'brienne'},
+    'pod': {'jon'},
+    'brienne': {'tyrion'},
+    'arya': {'tyrion'},
+    'jon': {'pod', 'jaime'},
+    'jaime': {'pod', 'jon'},
+    'ramsay': set()
 }
 
-b = { }
-
+b = {}
 
 
 def testFriendsOfFriends():
     print("Testing friendsOfFriends()...", end="")
-    assert(friendsOfFriends(a) == a1)
+    assert (friendsOfFriends(a) == a1)
     print("Passed!")
-
 
 
 #################################################
@@ -251,8 +254,10 @@ def testAll():
     testMovieAwards()
     testFriendsOfFriends()
 
+
 def main():
     testAll()
+
 
 if __name__ == '__main__':
     main()

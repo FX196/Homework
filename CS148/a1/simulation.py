@@ -15,8 +15,8 @@ At the bottom of the file, there is a sample_simulation function that you
 can use to try running the simulation at any time.
 """
 import csv
-from datetime import datetime, timedelta
 import json
+from datetime import datetime, timedelta
 from typing import Dict, List, Tuple
 
 from bikeshare import Ride, Station
@@ -67,14 +67,14 @@ class Simulation:
         station_list = list(self.all_stations.values())
         for ride in self.all_rides:
             if (ride.end_time > start and ride.end_time < end) or \
-            (ride.start_time < end and ride.start_time > start):
+                    (ride.start_time < end and ride.start_time > start):
                 self.event_queue.add(RideStartEvent(self, ride, start, end))
         while current_time != end:
             self._update_status(current_time)
-            self.visualizer.render_drawables(station_list+\
+            self.visualizer.render_drawables(station_list + \
                                              self.active_rides, current_time)
             current_time += step
-            
+
         # Leave this code at the very bottom of this method.
         # It will keep the visualization window open until you close
         # it by pressing the 'X'.
@@ -108,15 +108,14 @@ class Simulation:
             if ride.start_time == time and ride not in self.active_rides:
                 if ride.start.update_bikes(-1):
                     self.active_rides.append(ride)
-                
+
     def _update_status(self, time: datetime):
         """Wrapper method for updating this simulation's rides and station
         """
         self._update_active_rides_fast(time)
         for station in list(self.all_stations.values()):
             station.update_time()
-            
-        
+
     def calculate_statistics(self) -> Dict[str, Tuple[str, float]]:
         """Return a dictionary containing statistics for this simulation.
 
@@ -139,19 +138,19 @@ class Simulation:
         stats = []
         for station in list(self.all_stations.values()):
             stats.append(station.get_stats())
-        #sort list by station name
-        stats = sorted(stats, key=lambda station: station[4]) 
+        # sort list by station name
+        stats = sorted(stats, key=lambda station: station[4])
         sorted_lists = []
-        #a list of lists sorted by: max_start, max_end,
-        #max_time_low_availability, max_time_low_unoccupied
+        # a list of lists sorted by: max_start, max_end,
+        # max_time_low_availability, max_time_low_unoccupied
         sorted_lists.append(sorted(stats, key=lambda station: station[0]))
         sorted_lists.append(sorted(stats, key=lambda station: station[1]))
         sorted_lists.append(sorted(stats, key=lambda station: station[2]))
         sorted_lists.append(sorted(stats, key=lambda station: station[3]))
         index = 0
         for sorted_list in sorted_lists:
-        #for each of the four statistics, remove the ones with the largest
-        #but also equal values,leaving the station with the "smallest" name
+            # for each of the four statistics, remove the ones with the largest
+            # but also equal values,leaving the station with the "smallest" name
             while len(sorted_list) > 1:
                 if sorted_list[-1][index] == sorted_list[-2][index]:
                     sorted_list.pop(-1)
@@ -162,17 +161,15 @@ class Simulation:
         max_end = sorted_lists[1][-1]
         max_time_low_availability = sorted_lists[2][-1]
         max_time_low_unoccupied = sorted_lists[3][-1]
-        
+
         return {
             'max_start': (max_start[4], max_start[0]),
             'max_end': (max_end[4], max_end[1]),
-            'max_time_low_availability': (max_time_low_availability[4]\
-                                          , max_time_low_availability[2]),
-            'max_time_low_unoccupied': (max_time_low_unoccupied[4]\
-                                        , max_time_low_unoccupied[3])
+            'max_time_low_availability': (max_time_low_availability[4] \
+                                              , max_time_low_availability[2]),
+            'max_time_low_unoccupied': (max_time_low_unoccupied[4] \
+                                            , max_time_low_unoccupied[3])
         }
-
-
 
     def _update_active_rides_fast(self, time: datetime) -> None:
         """Update this simulation's list of active rides for the given time.
@@ -216,8 +213,8 @@ def create_stations(stations_file: str) -> Dict[str, 'Station']:
         # as described in the assignment handout.
         # NOTE: all of the corresponding values are strings, and so you need
         # to convert some of them to numbers explicitly using int() or float().
-        stations[s['n']] = Station((s['lo'], s['la']),\
-                                    s['da']+s['ba'], s['da'], s['s'])
+        stations[s['n']] = Station((s['lo'], s['la']), \
+                                   s['da'] + s['ba'], s['da'], s['s'])
     return stations
 
 
@@ -246,7 +243,7 @@ def create_rides(rides_file: str,
             # datetime.datetime(2017, 6, 1, 8, 0)
             start_time = datetime.strptime(line[0], DATETIME_FORMAT)
             end_time = datetime.strptime(line[2], DATETIME_FORMAT)
-            rides.append(Ride(stations[line[1]], stations[line[3]]\
+            rides.append(Ride(stations[line[1]], stations[line[3]] \
                               , (start_time, end_time)))
 
     return rides
@@ -285,9 +282,9 @@ class RideStartEvent(Event):
     ride: Ride
     run_start: datetime
     run_end: datetime
-    
-    def __init__(self, simulation: 'Simulation', ride: Ride,\
-                  run_start: datetime, run_end: datetime):
+
+    def __init__(self, simulation: 'Simulation', ride: Ride, \
+                 run_start: datetime, run_end: datetime):
         """Initialize start event
         """
         Event.__init__(self, simulation, ride.start_time)
@@ -303,16 +300,17 @@ class RideStartEvent(Event):
         self.simulation.active_rides.append(self.ride)
         return [RideEndEvent(self.simulation, self.ride, self.run_end)]
 
+
 class RideEndEvent(Event):
     """An event corresponding to the start of a ride."""
     ride: Ride
     run_end: datetime
-    
+
     def __init__(self, simulation, ride: Ride, run_end: datetime):
         Event.__init__(self, simulation, ride.end_time)
         self.ride = ride
         self.run_end = run_end
-        
+
     def process(self) -> List['Event']:
         if self.time <= self.run_end:
             self.ride.end.update_bikes(1)
@@ -330,13 +328,13 @@ def sample_simulation() -> Dict[str, Tuple[str, float]]:
 
 if __name__ == '__main__':
     # Uncomment these lines when you want to check your work using python_ta!
-    #import python_ta
-    #python_ta.check_all(config={
+    # import python_ta
+    # python_ta.check_all(config={
     #    'allowed-io': ['create_stations', 'create_rides'],
     #    'allowed-import-modules': [
     #        'doctest', 'python_ta', 'typing',
     #        'csv', 'datetime', 'json',
     #        'bikeshare', 'container', 'visualizer'
     #    ]
-    #})
+    # })
     print(sample_simulation())

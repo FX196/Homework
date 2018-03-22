@@ -18,7 +18,6 @@ a graphical window.
 from datetime import datetime
 from typing import Tuple
 
-
 # Sprite files
 STATION_SPRITE = 'stationsprite.png'
 RIDE_SPRITE = 'bikesprite.png'
@@ -31,7 +30,7 @@ class Drawable:
     sprite:
         The filename of the image to be drawn for this object.
     """
-    
+
     sprite: str
 
     def __init__(self, sprite_file: str) -> None:
@@ -96,7 +95,7 @@ class Station(Drawable):
         the header of an overridden method.
         """
         return self.location
-    
+
     def update_bikes(self, delta_num_bikes: int) -> bool:
         """Update number of bikes at station returns
             True if change successful, otherwise returns False
@@ -116,21 +115,22 @@ class Station(Drawable):
             else:
                 return False
         return True
-            
+
     def update_time(self):
         """Update low availability and low unoccupied times,
             increment by 60 seconds
         """
         if self.num_bikes <= 5:
             self.low_availability += 60.0
-        if self.capacity-self.num_bikes <= 5:
+        if self.capacity - self.num_bikes <= 5:
             self.low_unoccupied += 60.0
-            
+
     def get_stats(self):
         """Returns statistics after simulation has completed
         """
         return self.station_start, self.station_end, \
-            self.low_availability, self.low_unoccupied, self.name
+               self.low_availability, self.low_unoccupied, self.name
+
 
 class Ride(Drawable):
     """A ride using a Bixi bike.
@@ -167,7 +167,7 @@ class Ride(Drawable):
         Drawable.__init__(self, RIDE_SPRITE)
         self.start, self.end = start, end
         self.start_time, self.end_time = times[0], times[1]
-        self.total_time = (times[1]-times[0]).total_seconds()
+        self.total_time = (times[1] - times[0]).total_seconds()
 
     def get_position(self, time: datetime) -> Tuple[float, float]:
         """Return the (long, lat) position of this ride for the given time.
@@ -175,16 +175,18 @@ class Ride(Drawable):
         A ride travels in a straight line between its start and end stations
         at a constant speed.
         """
-        elapsed_time = (time-self.start_time).total_seconds()
+        elapsed_time = (time - self.start_time).total_seconds()
         start_long, start_lat = self.start.get_position(time)
         end_long, end_lat = self.end.get_position(time)
-        
-        long = start_long+(end_long-start_long)*(elapsed_time/self.total_time)
-        lat = start_lat+(end_lat-start_lat)*(elapsed_time/self.total_time)
+
+        long = start_long + (end_long - start_long) * (elapsed_time / self.total_time)
+        lat = start_lat + (end_lat - start_lat) * (elapsed_time / self.total_time)
         return long, lat
+
 
 if __name__ == '__main__':
     import python_ta
+
     python_ta.check_all(config={
         'allowed-import-modules': [
             'doctest', 'python_ta', 'typing',

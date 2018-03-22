@@ -19,12 +19,12 @@ lat/long coordinates and pixel coordinates on the pygame window.
 DO NOT CHANGE ANY CODE IN THIS FILE. You don't need to for this assignment,
 and in fact you aren't even submitting this file!
 """
-from datetime import datetime
 import os
+from datetime import datetime
 from typing import List, Tuple
+
 import pygame
 from bikeshare import Drawable
-
 
 WHITE = (255, 255, 255)
 MAP_FILE = 'montreal.png'
@@ -206,6 +206,7 @@ class Map:
 
 if __name__ == '__main__':
     import python_ta
+
     python_ta.check_all(config={
         'allowed-import-modules': [
             'doctest', 'python_ta', 'typing',

@@ -2,9 +2,6 @@
 # Colab6
 # Partner: Shuyuan Ding (shuyuand)###############
 
-import math
-import string
-import copy
 import random
 
 
@@ -41,8 +38,8 @@ def init(data, width, height):
     data.timerDelay = 600  # milliseconds
     data.cellSize = 20
     data.margin = 25
-    data.rows = int((height - data.margin*2) / data.cellSize)
-    data.cols = int((width - data.margin*2) / data.cellSize)
+    data.rows = int((height - data.margin * 2) / data.cellSize)
+    data.cols = int((width - data.margin * 2) / data.cellSize)
     data.emptyColor = "blue"
     data.board = getBoard(data)
     data.piecesColor = ["red", "yellow", "magenta", "pink", "cyan",
@@ -267,6 +264,6 @@ def run(width=300, height=300):
     root.mainloop()  # blocks until window is closed
     print("bye!")
 
+
 if __name__ == "__main__":
     playTeris(15, 10)
-
