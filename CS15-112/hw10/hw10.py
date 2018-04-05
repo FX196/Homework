@@ -64,9 +64,8 @@ def solveABC(constraints, aLocation, sol=None, atp='B'):
             sol[prow][pcol] = atp
         else:
             continue
-        if (atp in rows[prow]) or (atp in cols[pcol]) or ((prow == pcol) and ((atp in
-                                                                               diags['left'])) or (
-                                                                  (prow + pcol == 4) and atp in diags['right'])):
+        if (atp in rows[prow]) or (atp in cols[pcol]) or ((prow == pcol) and ((atp in diags['left']))
+                                                          or ((prow + pcol == 4) and atp in diags['right'])):
             tempsol = solveABC(constraints, aLocation, sol, chr(ord(atp) + 1))
             if tempsol != None:
                 return sol
